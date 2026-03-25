@@ -2,7 +2,7 @@
 
 ## Description
 
-`dictionar-traduceri` is a simple beginner-level C++ OOP project.
+`dictionar-traduceri` is a beginner-level C++ OOP project.
 It implements a small Romanian-English dictionary using classes, dynamic memory with `char*`, and a linked list.
 
 ## Features
@@ -13,6 +13,8 @@ It implements a small Romanian-English dictionary using classes, dynamic memory 
 - delete a word
 - update the English translation
 - print words by type
+- print dictionary information
+- print dictionary statistics
 
 ## Technologies Used
 
@@ -39,39 +41,55 @@ After building, run the executable:
 ./build/dictionar-traduceri
 ```
 
-On some systems, the executable name may be slightly different depending on the compiler or platform.
-
 ## Design
 
-The project uses two main classes:
+The project uses four main classes:
 
 ### Word
 
-The `Word` class stores:
+The `Word` class stores the data for one dictionary entry:
 - Romanian word
 - English word
 - word type
+- extra information such as id, status, and level
 
-It uses:
+It also contains:
 - constructors
 - copy constructor
 - assignment operator
 - destructor
 - getters and setters
+- `operator<<` and `operator>>`
 
-### Dictionary
+### DictionaryNode
 
-The `Dictionary` class stores all words in a singly linked list.
+The `DictionaryNode` class represents one node from the linked list.
 
 Each node contains:
 - one `Word` object
 - pointer to the next node
+- extra node information
 
-The dictionary is responsible for:
+### DictionaryStats
+
+The `DictionaryStats` class stores simple statistics about the dictionary.
+
+Examples:
+- total words
+- deleted words
+- average word length
+- type counters
+
+### Dictionary
+
+The `Dictionary` class manages the full linked list of words.
+
+It is responsible for:
 - adding words
 - searching words
 - deleting words
 - updating translations
 - printing words
+- updating statistics
 
-This design is simple and easy to explain for a beginner OOP homework project.
+This design keeps the original dictionary theme, but extends it so the project covers more OOP requirements.
