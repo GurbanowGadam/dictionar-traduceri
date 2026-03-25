@@ -1,11 +1,14 @@
 #include "../include/Word.h"
 
 #include <cstring>
-#include <iostream>
+
+int Word::objectCount = 0;
 
 char* Word::copyText(const char* text) const {
-    if (text == nullptr) {
-        return nullptr;
+    if (text == 0) {
+        char* emptyText = new char[1];
+        emptyText[0] = '\0';
+        return emptyText;
     }
 
     char* newText = new char[std::strlen(text) + 1];
@@ -14,32 +17,52 @@ char* Word::copyText(const char* text) const {
 }
 
 Word::Word() {
-    romanianWord = nullptr;
-    englishWord = nullptr;
-    wordType = nullptr;
+    id = 0;
+    romanianWord = copyText("");
+    englishWord = copyText("");
+    wordType = copyText("");
+    active = true;
+    level = 'A';
+    objectCount++;
 }
 
-Word::Word(const char* romanianWord, const char* englishWord, const char* wordType) {
+Word::Word(const char* romanianWord, const char* englishWord, const char* wordType,
+           bool active, char level, int id) {
+    this->id = id;
     this->romanianWord = copyText(romanianWord);
     this->englishWord = copyText(englishWord);
     this->wordType = copyText(wordType);
+    this->active = active;
+    this->level = level;
+    objectCount++;
 }
 
 Word::Word(const Word& other) {
+    id = other.id;
     romanianWord = copyText(other.romanianWord);
     englishWord = copyText(other.englishWord);
     wordType = copyText(other.wordType);
+    active = other.active;
+    level = other.level;
+    objectCount++;
 }
 
 Word& Word::operator=(const Word& other) {
     if (this != &other) {
+        char* newRomanian = copyText(other.romanianWord);
+        char* newEnglish = copyText(other.englishWord);
+        char* newType = copyText(other.wordType);
+
         delete[] romanianWord;
         delete[] englishWord;
         delete[] wordType;
 
-        romanianWord = copyText(other.romanianWord);
-        englishWord = copyText(other.englishWord);
-        wordType = copyText(other.wordType);
+        id = other.id;
+        romanianWord = newRomanian;
+        englishWord = newEnglish;
+        wordType = newType;
+        active = other.active;
+        level = other.level;
     }
 
     return *this;
@@ -49,6 +72,11 @@ Word::~Word() {
     delete[] romanianWord;
     delete[] englishWord;
     delete[] wordType;
+    objectCount--;
+}
+
+int Word::getId() const {
+    return id;
 }
 
 const char* Word::getRomanianWord() const {
@@ -61,6 +89,18 @@ const char* Word::getEnglishWord() const {
 
 const char* Word::getWordType() const {
     return wordType;
+}
+
+bool Word::isActive() const {
+    return active;
+}
+
+char Word::getLevel() const {
+    return level;
+}
+
+void Word::setId(int id) {
+    this->id = id;
 }
 
 void Word::setRomanianWord(const char* romanianWord) {
@@ -81,8 +121,16 @@ void Word::setWordType(const char* wordType) {
     this->wordType = newText;
 }
 
+void Word::setActive(bool active) {
+    this->active = active;
+}
+
+void Word::setLevel(char level) {
+    this->level = level;
+}
+
 bool Word::matchesRomanian(const char* word) const {
-    if (romanianWord == nullptr || word == nullptr) {
+    if (word == 0) {
         return false;
     }
 
@@ -90,29 +138,68 @@ bool Word::matchesRomanian(const char* word) const {
 }
 
 bool Word::matchesEnglish(const char* word) const {
-    if (englishWord == nullptr || word == nullptr) {
+    if (word == 0) {
         return false;
     }
 
     return std::strcmp(englishWord, word) == 0;
 }
 
+void Word::changeTranslation(const char* newEnglish) {
+    setEnglishWord(newEnglish);
+}
+
+int Word::getRomanianLength() const {
+    return (int)std::strlen(romanianWord);
+}
+
 void Word::print() const {
-    std::cout << "Romanian: ";
-    if (romanianWord != nullptr) {
-        std::cout << romanianWord;
-    }
-    std::cout << "\n";
+    std::cout << *this;
+}
 
-    std::cout << "English: ";
-    if (englishWord != nullptr) {
-        std::cout << englishWord;
-    }
-    std::cout << "\n";
+int Word::getObjectCount() {
+    return objectCount;
+}
 
-    std::cout << "Type: ";
-    if (wordType != nullptr) {
-        std::cout << wordType;
-    }
-    std::cout << "\n";
+std::ostream& operator<<(std::ostream& out, const Word& word) {
+    out << "Id: " << word.id << "\n";
+    out << "Romanian: " << word.romanianWord << "\n";
+    out << "English: " << word.englishWord << "\n";
+    out << "Type: " << word.wordType << "\n";
+    out << "Active: " << (word.active ? "yes" : "no") << "\n";
+    out << "Level: " << word.level << "\n";
+    return out;
+}
+
+std::istream& operator>>(std::istream& in, Word& word) {
+    char romanian[100];
+    char english[100];
+    char type[100];
+    char activeChar;
+    char level;
+
+    std::cout << "Romanian word: ";
+    in.getline(romanian, 100);
+
+    std::cout << "English word: ";
+    in.getline(english, 100);
+
+    std::cout << "Word type: ";
+    in.getline(type, 100);
+
+    std::cout << "Active (y/n): ";
+    in >> activeChar;
+    in.ignore(1000, '\n');
+
+    std::cout << "Level: ";
+    in >> level;
+    in.ignore(1000, '\n');
+
+    word.setRomanianWord(romanian);
+    word.setEnglishWord(english);
+    word.setWordType(type);
+    word.setActive(activeChar == 'y' || activeChar == 'Y');
+    word.setLevel(level);
+
+    return in;
 }

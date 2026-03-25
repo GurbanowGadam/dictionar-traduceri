@@ -10,6 +10,8 @@ include_directories(include)
 add_executable(dictionar-traduceri
     main.cpp
     src/Word.cpp
+    src/DictionaryNode.cpp
+    src/DictionaryStats.cpp
     src/Dictionary.cpp
 )
 

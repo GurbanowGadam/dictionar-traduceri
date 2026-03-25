@@ -1,28 +1,56 @@
 #include "../include/Dictionary.h"
 
 #include <cstring>
-#include <iostream>
 
-Dictionary::Dictionary() {
-    head = nullptr;
+char* Dictionary::copyText(const char* text) const {
+    if (text == 0) {
+        char* emptyText = new char[1];
+        emptyText[0] = '\0';
+        return emptyText;
+    }
+
+    char* newText = new char[std::strlen(text) + 1];
+    std::strcpy(newText, text);
+    return newText;
 }
 
-Dictionary::Dictionary(const Dictionary& other) {
-    head = nullptr;
+Dictionary::Dictionary() : stats() {
+    head = 0;
+    dictionaryName = copyText("Romanian-English Dictionary");
+    nextId = 1;
+    modified = false;
+    version = 1.0f;
+}
+
+Dictionary::Dictionary(const char* dictionaryName, float version, bool modified, int nextId)
+    : stats() {
+    head = 0;
+    this->dictionaryName = copyText(dictionaryName);
+    this->nextId = nextId;
+    this->modified = modified;
+    this->version = version;
+}
+
+Dictionary::Dictionary(const Dictionary& other) : stats(other.stats) {
+    head = 0;
+    dictionaryName = copyText(other.dictionaryName);
+    nextId = other.nextId;
+    modified = other.modified;
+    version = other.version;
     copyFrom(other);
 }
 
 Dictionary& Dictionary::operator=(const Dictionary& other) {
     if (this != &other) {
-        Node* current = head;
+        clear();
+        delete[] dictionaryName;
 
-        while (current != nullptr) {
-            Node* nextNode = current->next;
-            delete current;
-            current = nextNode;
-        }
+        dictionaryName = copyText(other.dictionaryName);
+        nextId = other.nextId;
+        modified = other.modified;
+        version = other.version;
+        stats = other.stats;
 
-        head = nullptr;
         copyFrom(other);
     }
 
@@ -30,127 +58,250 @@ Dictionary& Dictionary::operator=(const Dictionary& other) {
 }
 
 Dictionary::~Dictionary() {
-    Node* current = head;
+    clear();
+    delete[] dictionaryName;
+}
 
-    while (current != nullptr) {
-        Node* nextNode = current->next;
+void Dictionary::clear() {
+    DictionaryNode* current = head;
+
+    while (current != 0) {
+        DictionaryNode* nextNode = current->getNext();
         delete current;
         current = nextNode;
     }
+
+    head = 0;
 }
 
 void Dictionary::copyFrom(const Dictionary& other) {
-    Node* current = other.head;
-    Node* last = nullptr;
+    DictionaryNode* current = other.head;
+    DictionaryNode* last = 0;
 
-    while (current != nullptr) {
-        Node* newNode = new Node;
-        newNode->info = current->info;
-        newNode->next = nullptr;
+    while (current != 0) {
+        DictionaryNode* newNode = new DictionaryNode(current->getInfo(), current->getIndex(),
+                                                     current->isMarked(), current->getWeight(), 0);
 
-        if (head == nullptr) {
+        if (head == 0) {
             head = newNode;
         } else {
-            last->next = newNode;
+            last->setNext(newNode);
         }
 
         last = newNode;
-        current = current->next;
+        current = current->getNext();
     }
 }
 
-void Dictionary::addWord(const Word& w) {
-    Node* newNode = new Node;
-    newNode->info = w;
-    newNode->next = head;
+void Dictionary::refreshStats() {
+    int deletedCount = stats.getDeletedWords();
+    bool changedValue = stats.isChanged();
+
+    stats.reset();
+    stats.setDeletedWords(deletedCount);
+    stats.setChanged(changedValue);
+
+    int totalLength = 0;
+    DictionaryNode* current = head;
+
+    while (current != 0) {
+        stats.setTotalWords(stats.getTotalWords() + 1);
+        stats.increaseType(current->getInfo().getWordType());
+        totalLength += current->getInfo().getRomanianLength();
+        current = current->getNext();
+    }
+
+    if (stats.getTotalWords() > 0) {
+        stats.setAverageRomanianLength((double)totalLength / stats.getTotalWords());
+    }
+}
+
+const char* Dictionary::getDictionaryName() const {
+    return dictionaryName;
+}
+
+int Dictionary::getNextId() const {
+    return nextId;
+}
+
+bool Dictionary::isModified() const {
+    return modified;
+}
+
+float Dictionary::getVersion() const {
+    return version;
+}
+
+const DictionaryStats& Dictionary::getStats() const {
+    return stats;
+}
+
+void Dictionary::setDictionaryName(const char* dictionaryName) {
+    char* newText = copyText(dictionaryName);
+    delete[] this->dictionaryName;
+    this->dictionaryName = newText;
+}
+
+void Dictionary::setVersion(float version) {
+    this->version = version;
+}
+
+void Dictionary::setModified(bool modified) {
+    this->modified = modified;
+}
+
+void Dictionary::addWord(const Word& word) {
+    Word copyWord(word);
+
+    if (copyWord.getId() == 0) {
+        copyWord.setId(nextId);
+        nextId++;
+    }
+
+    DictionaryNode* newNode = new DictionaryNode(copyWord, countWords() + 1, false, 1.0f, head);
     head = newNode;
+    modified = true;
+    refreshStats();
+    stats.setChanged(true);
 }
 
 void Dictionary::printAll() const {
-    Node* current = head;
+    DictionaryNode* current = head;
 
-    if (current == nullptr) {
+    if (current == 0) {
         std::cout << "Dictionary is empty.\n";
         return;
     }
 
-    while (current != nullptr) {
-        current->info.print();
-        std::cout << "\n";
-        current = current->next;
+    while (current != 0) {
+        std::cout << current->getInfo();
+        std::cout << "--------------------\n";
+        current = current->getNext();
     }
 }
 
-Dictionary::Node* Dictionary::searchRomanian(const char* word) const {
-    Node* current = head;
+DictionaryNode* Dictionary::searchRomanian(const char* word) const {
+    DictionaryNode* current = head;
 
-    while (current != nullptr) {
-        if (current->info.matchesRomanian(word)) {
+    while (current != 0) {
+        if (current->getInfo().matchesRomanian(word)) {
             return current;
         }
-        current = current->next;
+
+        current = current->getNext();
     }
 
-    return nullptr;
+    return 0;
 }
 
 bool Dictionary::deleteWord(const char* word) {
-    if (head == nullptr) {
+    if (head == 0) {
         return false;
     }
 
-    if (head->info.matchesRomanian(word)) {
-        Node* nodeToDelete = head;
-        head = head->next;
+    if (head->getInfo().matchesRomanian(word)) {
+        DictionaryNode* nodeToDelete = head;
+        head = head->getNext();
+        stats.setDeletedWords(stats.getDeletedWords() + 1);
         delete nodeToDelete;
+        modified = true;
+        refreshStats();
+        stats.setChanged(true);
         return true;
     }
 
-    Node* previous = head;
-    Node* current = head->next;
+    DictionaryNode* previous = head;
+    DictionaryNode* current = head->getNext();
 
-    while (current != nullptr) {
-        if (current->info.matchesRomanian(word)) {
-            previous->next = current->next;
+    while (current != 0) {
+        if (current->getInfo().matchesRomanian(word)) {
+            previous->setNext(current->getNext());
+            stats.setDeletedWords(stats.getDeletedWords() + 1);
             delete current;
+            modified = true;
+            refreshStats();
+            stats.setChanged(true);
             return true;
         }
 
         previous = current;
-        current = current->next;
+        current = current->getNext();
     }
 
     return false;
 }
 
 bool Dictionary::updateEnglishWord(const char* romanian, const char* newEnglish) {
-    Node* foundNode = searchRomanian(romanian);
+    DictionaryNode* foundNode = searchRomanian(romanian);
 
-    if (foundNode == nullptr) {
+    if (foundNode == 0) {
         return false;
     }
 
-    foundNode->info.setEnglishWord(newEnglish);
+    foundNode->getInfo().changeTranslation(newEnglish);
+    modified = true;
+    stats.setChanged(true);
     return true;
 }
 
 void Dictionary::printByType(const char* type) const {
-    Node* current = head;
+    DictionaryNode* current = head;
     bool found = false;
 
-    while (current != nullptr) {
-        const char* currentType = current->info.getWordType();
-
-        if (currentType != nullptr && type != nullptr && std::strcmp(currentType, type) == 0) {
-            current->info.print();
-            std::cout << "\n";
+    while (current != 0) {
+        if (std::strcmp(current->getInfo().getWordType(), type) == 0) {
+            std::cout << current->getInfo();
+            std::cout << "--------------------\n";
             found = true;
         }
 
-        current = current->next;
+        current = current->getNext();
     }
 
     if (!found) {
         std::cout << "No match found.\n";
     }
+}
+
+int Dictionary::countWords() const {
+    int count = 0;
+    DictionaryNode* current = head;
+
+    while (current != 0) {
+        count++;
+        current = current->getNext();
+    }
+
+    return count;
+}
+
+void Dictionary::printStats() const {
+    std::cout << stats;
+}
+
+std::ostream& operator<<(std::ostream& out, const Dictionary& dictionary) {
+    out << "Name: " << dictionary.dictionaryName << "\n";
+    out << "Next id: " << dictionary.nextId << "\n";
+    out << "Modified: " << (dictionary.modified ? "yes" : "no") << "\n";
+    out << "Version: " << dictionary.version << "\n";
+    out << dictionary.stats;
+    return out;
+}
+
+std::istream& operator>>(std::istream& in, Dictionary& dictionary) {
+    char name[100];
+    float version;
+
+    std::cout << "Dictionary name: ";
+    in.getline(name, 100);
+
+    std::cout << "Version: ";
+    in >> version;
+    in.ignore(1000, '\n');
+
+    dictionary.setDictionaryName(name);
+    dictionary.setVersion(version);
+    dictionary.setModified(false);
+
+    return in;
 }
