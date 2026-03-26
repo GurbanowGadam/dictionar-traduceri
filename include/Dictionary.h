@@ -29,7 +29,6 @@ public:
     int getNextId() const;
     bool isModified() const;
     float getVersion() const;
-    const DictionaryStats& getStats() const;
 
     void setDictionaryName(const char* dictionaryName);
     void setVersion(float version);

@@ -12,8 +12,6 @@ private:
     bool active;
     char level;
 
-    static int objectCount;
-
     char* copyText(const char* text) const;
 
 public:
@@ -43,8 +41,6 @@ public:
     void changeTranslation(const char* newEnglish);
     int getRomanianLength() const;
     void print() const;
-
-    static int getObjectCount();
 
     friend std::ostream& operator<<(std::ostream& out, const Word& word);
     friend std::istream& operator>>(std::istream& in, Word& word);

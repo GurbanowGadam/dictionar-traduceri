@@ -2,8 +2,6 @@
 #include <limits>
 
 #include "include/Dictionary.h"
-#include "include/DictionaryNode.h"
-#include "include/DictionaryStats.h"
 #include "include/Word.h"
 
 void printMenu() {
@@ -18,83 +16,15 @@ void printMenu() {
     std::cout << "8. Change dictionary info\n";
     std::cout << "9. Print statistics\n";
     std::cout << "0. Exit\n";
-    std::cout << "Choice: \n";
+    std::cout << "Choice: \n\n";
 }
 
 void readText(char text[], int size) {
     std::cin.getline(text, size);
 }
 
-void runDemo(Dictionary& dictionary) {
-    Word w1("casa", "house", "noun", true, 'A', 0);
-    Word w2("apa", "water", "noun", true, 'B', 0);
-    Word w3("frumos", "beautiful", "adjective", true, 'A', 0);
-    Word w4("a merge", "to walk", "verb", true, 'C', 0);
-    DictionaryNode sampleNode(w1, 1, false, 1.5f, 0);
-    DictionaryStats sampleStats(2, 1, true, 4.5);
-
-    w1.setLevel('B');
-    w1.setActive(true);
-    w1.setRomanianWord("casa");
-    w1.setWordType("noun");
-
-    sampleNode.setMarked(true);
-    sampleNode.setWeight(2.0f);
-    sampleStats.setTotalWords(3);
-    sampleStats.setDeletedWords(1);
-    sampleStats.setChanged(true);
-    sampleStats.setAverageRomanianLength(4.0);
-
-    dictionary.addWord(w1);
-    dictionary.addWord(w2);
-    dictionary.addWord(w3);
-    dictionary.addWord(w4);
-
-    std::cout << "Demo:\n";
-    std::cout << "Word objects: " << Word::getObjectCount() << "\n";
-    std::cout << "Stats objects: " << DictionaryStats::getObjectCount() << "\n";
-    std::cout << "Sample node:\n" << sampleNode;
-    std::cout << "Sample stats:\n" << sampleStats;
-    std::cout << "Dictionary name: " << dictionary.getDictionaryName() << "\n";
-    std::cout << "Version: " << dictionary.getVersion() << "\n";
-    std::cout << "Next id: " << dictionary.getNextId() << "\n";
-    std::cout << "Modified: " << (dictionary.isModified() ? "yes" : "no") << "\n";
-    dictionary.printAll();
-
-    std::cout << "\nSearch: apa\n";
-    DictionaryNode* foundNode = dictionary.searchRomanian("apa");
-    if (foundNode != nullptr) {
-        std::cout << foundNode->getInfo();
-    } else {
-        std::cout << "Not found.\n";
-    }
-
-    std::cout << "\nUpdate casa -> home\n";
-    if (dictionary.updateEnglishWord("casa", "home")) {
-        std::cout << "Updated.\n";
-    } else {
-        std::cout << "Not found.\n";
-    }
-
-    std::cout << "\nType: noun\n";
-    dictionary.printByType("noun");
-
-    std::cout << "\nDelete: frumos\n";
-    if (dictionary.deleteWord("frumos")) {
-        std::cout << "Deleted.\n";
-    } else {
-        std::cout << "Not found.\n";
-    }
-
-    std::cout << "\nAfter delete:\n";
-    dictionary.printAll();
-    std::cout << "\nDictionary stats:\n";
-    dictionary.printStats();
-}
-
 int main() {
     Dictionary dictionary("Romanian-English Dictionary", 1.0f, false, 1);
-    runDemo(dictionary);
 
     int choice;
 

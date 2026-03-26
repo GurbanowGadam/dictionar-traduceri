@@ -87,10 +87,6 @@ float Dictionary::getVersion() const {
     return version;
 }
 
-const DictionaryStats& Dictionary::getStats() const {
-    return stats;
-}
-
 void Dictionary::setDictionaryName(const char* dictionaryName) {
     char* newText = copyText(dictionaryName);
     delete[] this->dictionaryName;

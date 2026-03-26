@@ -31,9 +31,6 @@ public:
     void setIndex(int index);
     void setMarked(bool marked);
     void setWeight(float weight);
-
-    friend std::ostream& operator<<(std::ostream& out, const DictionaryNode& node);
-    friend std::istream& operator>>(std::istream& in, DictionaryNode& node);
 };
 
 #endif

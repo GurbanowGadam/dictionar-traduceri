@@ -2,8 +2,6 @@
 
 #include <cstring>
 
-int Word::objectCount = 0;
-
 char* Word::copyText(const char* text) const {
     if (text == 0) {
         char* emptyText = new char[1];
@@ -23,7 +21,6 @@ Word::Word() {
     wordType = copyText("");
     active = true;
     level = 'A';
-    objectCount++;
 }
 
 Word::Word(const char* romanianWord, const char* englishWord, const char* wordType,
@@ -34,7 +31,6 @@ Word::Word(const char* romanianWord, const char* englishWord, const char* wordTy
     this->wordType = copyText(wordType);
     this->active = active;
     this->level = level;
-    objectCount++;
 }
 
 Word::Word(const Word& other) {
@@ -44,7 +40,6 @@ Word::Word(const Word& other) {
     wordType = copyText(other.wordType);
     active = other.active;
     level = other.level;
-    objectCount++;
 }
 
 Word& Word::operator=(const Word& other) {
@@ -72,7 +67,6 @@ Word::~Word() {
     delete[] romanianWord;
     delete[] englishWord;
     delete[] wordType;
-    objectCount--;
 }
 
 int Word::getId() const {
@@ -155,10 +149,6 @@ int Word::getRomanianLength() const {
 
 void Word::print() const {
     std::cout << *this;
-}
-
-int Word::getObjectCount() {
-    return objectCount;
 }
 
 std::ostream& operator<<(std::ostream& out, const Word& word) {

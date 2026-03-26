@@ -54,39 +54,3 @@ void DictionaryNode::setMarked(bool marked) {
 void DictionaryNode::setWeight(float weight) {
     this->weight = weight;
 }
-
-std::ostream& operator<<(std::ostream& out, const DictionaryNode& node) {
-    out << node.info;
-    out << "Index: " << node.index << "\n";
-    out << "Marked: " << (node.marked ? "yes" : "no") << "\n";
-    out << "Weight: " << node.weight << "\n";
-    return out;
-}
-
-std::istream& operator>>(std::istream& in, DictionaryNode& node) {
-    Word word;
-    int index;
-    char markedChar;
-    float weight;
-
-    in >> word;
-    std::cout << "Node index: ";
-    in >> index;
-    in.ignore(1000, '\n');
-
-    std::cout << "Marked (y/n): ";
-    in >> markedChar;
-    in.ignore(1000, '\n');
-
-    std::cout << "Weight: ";
-    in >> weight;
-    in.ignore(1000, '\n');
-
-    node.setInfo(word);
-    node.setIndex(index);
-    node.setMarked(markedChar == 'y' || markedChar == 'Y');
-    node.setWeight(weight);
-    node.setNext(0);
-
-    return in;
-}

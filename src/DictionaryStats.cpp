@@ -2,8 +2,6 @@
 
 #include <cstring>
 
-int DictionaryStats::objectCount = 0;
-
 void DictionaryStats::allocateCounters(int size) {
     counterSize = size;
     typeCounters = new int[counterSize];
@@ -19,54 +17,10 @@ DictionaryStats::DictionaryStats() {
     changed = false;
     averageRomanianLength = 0.0;
     allocateCounters(3);
-    objectCount++;
-}
-
-DictionaryStats::DictionaryStats(int totalWords, int deletedWords, bool changed,
-                                 double averageRomanianLength, int counterSize) {
-    this->totalWords = totalWords;
-    this->deletedWords = deletedWords;
-    this->changed = changed;
-    this->averageRomanianLength = averageRomanianLength;
-    allocateCounters(counterSize);
-    objectCount++;
-}
-
-DictionaryStats::DictionaryStats(const DictionaryStats& other) {
-    totalWords = other.totalWords;
-    deletedWords = other.deletedWords;
-    changed = other.changed;
-    averageRomanianLength = other.averageRomanianLength;
-    allocateCounters(other.counterSize);
-
-    for (int i = 0; i < counterSize; i++) {
-        typeCounters[i] = other.typeCounters[i];
-    }
-
-    objectCount++;
-}
-
-DictionaryStats& DictionaryStats::operator=(const DictionaryStats& other) {
-    if (this != &other) {
-        delete[] typeCounters;
-
-        totalWords = other.totalWords;
-        deletedWords = other.deletedWords;
-        changed = other.changed;
-        averageRomanianLength = other.averageRomanianLength;
-        allocateCounters(other.counterSize);
-
-        for (int i = 0; i < counterSize; i++) {
-            typeCounters[i] = other.typeCounters[i];
-        }
-    }
-
-    return *this;
 }
 
 DictionaryStats::~DictionaryStats() {
     delete[] typeCounters;
-    objectCount--;
 }
 
 int DictionaryStats::getTotalWords() const {
@@ -148,10 +102,6 @@ void DictionaryStats::decreaseType(const char* type) {
     }
 }
 
-int DictionaryStats::getObjectCount() {
-    return objectCount;
-}
-
 std::ostream& operator<<(std::ostream& out, const DictionaryStats& stats) {
     out << "Total words: " << stats.totalWords << "\n";
     out << "Deleted words: " << stats.deletedWords << "\n";
@@ -161,28 +111,4 @@ std::ostream& operator<<(std::ostream& out, const DictionaryStats& stats) {
     out << "Verb count: " << stats.typeCounters[1] << "\n";
     out << "Other count: " << stats.typeCounters[2] << "\n";
     return out;
-}
-
-std::istream& operator>>(std::istream& in, DictionaryStats& stats) {
-    int totalWords;
-    int deletedWords;
-    char changedChar;
-    double averageRomanianLength;
-
-    std::cout << "Total words: ";
-    in >> totalWords;
-    std::cout << "Deleted words: ";
-    in >> deletedWords;
-    std::cout << "Changed (y/n): ";
-    in >> changedChar;
-    std::cout << "Average Romanian length: ";
-    in >> averageRomanianLength;
-    in.ignore(1000, '\n');
-
-    stats.setTotalWords(totalWords);
-    stats.setDeletedWords(deletedWords);
-    stats.setChanged(changedChar == 'y' || changedChar == 'Y');
-    stats.setAverageRomanianLength(averageRomanianLength);
-
-    return in;
 }

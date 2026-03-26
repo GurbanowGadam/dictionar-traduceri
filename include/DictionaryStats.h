@@ -12,16 +12,10 @@ private:
     int* typeCounters;
     int counterSize;
 
-    static int objectCount;
-
     void allocateCounters(int size);
 
 public:
     DictionaryStats();
-    explicit DictionaryStats(int totalWords, int deletedWords, bool changed,
-                             double averageRomanianLength, int counterSize = 3);
-    DictionaryStats(const DictionaryStats& other);
-    DictionaryStats& operator=(const DictionaryStats& other);
     ~DictionaryStats();
 
     int getTotalWords() const;
@@ -39,10 +33,7 @@ public:
     void increaseType(const char* type);
     void decreaseType(const char* type);
 
-    static int getObjectCount();
-
     friend std::ostream& operator<<(std::ostream& out, const DictionaryStats& stats);
-    friend std::istream& operator>>(std::istream& in, DictionaryStats& stats);
 };
 
 #endif
