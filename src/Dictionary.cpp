@@ -31,32 +31,6 @@ Dictionary::Dictionary(const char* dictionaryName, float version, bool modified,
     this->version = version;
 }
 
-Dictionary::Dictionary(const Dictionary& other) : stats(other.stats) {
-    head = 0;
-    dictionaryName = copyText(other.dictionaryName);
-    nextId = other.nextId;
-    modified = other.modified;
-    version = other.version;
-    copyFrom(other);
-}
-
-Dictionary& Dictionary::operator=(const Dictionary& other) {
-    if (this != &other) {
-        clear();
-        delete[] dictionaryName;
-
-        dictionaryName = copyText(other.dictionaryName);
-        nextId = other.nextId;
-        modified = other.modified;
-        version = other.version;
-        stats = other.stats;
-
-        copyFrom(other);
-    }
-
-    return *this;
-}
-
 Dictionary::~Dictionary() {
     clear();
     delete[] dictionaryName;
@@ -72,25 +46,6 @@ void Dictionary::clear() {
     }
 
     head = 0;
-}
-
-void Dictionary::copyFrom(const Dictionary& other) {
-    DictionaryNode* current = other.head;
-    DictionaryNode* last = 0;
-
-    while (current != 0) {
-        DictionaryNode* newNode = new DictionaryNode(current->getInfo(), current->getIndex(),
-                                                     current->isMarked(), current->getWeight(), 0);
-
-        if (head == 0) {
-            head = newNode;
-        } else {
-            last->setNext(newNode);
-        }
-
-        last = newNode;
-        current = current->getNext();
-    }
 }
 
 void Dictionary::refreshStats() {

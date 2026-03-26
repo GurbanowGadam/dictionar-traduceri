@@ -17,15 +17,12 @@ private:
 
     char* copyText(const char* text) const;
     void clear();
-    void copyFrom(const Dictionary& other);
     void refreshStats();
 
 public:
     Dictionary();
     explicit Dictionary(const char* dictionaryName, float version = 1.0f,
                         bool modified = false, int nextId = 1);
-    Dictionary(const Dictionary& other);
-    Dictionary& operator=(const Dictionary& other);
     ~Dictionary();
 
     const char* getDictionaryName() const;
