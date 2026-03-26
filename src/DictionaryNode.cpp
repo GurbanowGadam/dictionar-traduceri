@@ -8,23 +8,6 @@ DictionaryNode::DictionaryNode(const Word& info, int index, bool marked,
     : info(info), next(next), index(index), marked(marked), weight(weight) {
 }
 
-DictionaryNode::DictionaryNode(const DictionaryNode& other)
-    : info(other.info), next(other.next), index(other.index),
-      marked(other.marked), weight(other.weight) {
-}
-
-DictionaryNode& DictionaryNode::operator=(const DictionaryNode& other) {
-    if (this != &other) {
-        info = other.info;
-        next = other.next;
-        index = other.index;
-        marked = other.marked;
-        weight = other.weight;
-    }
-
-    return *this;
-}
-
 DictionaryNode::~DictionaryNode() {
 }
 

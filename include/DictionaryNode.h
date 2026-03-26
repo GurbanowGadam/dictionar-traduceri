@@ -17,8 +17,6 @@ public:
     DictionaryNode();
     explicit DictionaryNode(const Word& info, int index = 0, bool marked = false,
                             float weight = 1.0f, DictionaryNode* next = 0);
-    DictionaryNode(const DictionaryNode& other);
-    DictionaryNode& operator=(const DictionaryNode& other);
     ~DictionaryNode();
 
     const Word& getInfo() const;
