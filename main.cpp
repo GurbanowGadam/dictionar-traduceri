@@ -18,7 +18,7 @@ void printMenu() {
     std::cout << "8. Change dictionary info\n";
     std::cout << "9. Print statistics\n";
     std::cout << "0. Exit\n";
-    std::cout << "Choice: ";
+    std::cout << "Choice: \n";
 }
 
 void readText(char text[], int size) {

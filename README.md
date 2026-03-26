@@ -2,7 +2,7 @@
 
 ## Description
 
-`dictionar-traduceri` is a beginner-level C++ OOP project.
+`dictionar-traduceri` is a C++ OOP project.
 It implements a small Romanian-English dictionary using classes, dynamic memory with `char*`, and a linked list.
 
 ## Features
