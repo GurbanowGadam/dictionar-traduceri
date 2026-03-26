@@ -18,16 +18,14 @@ Dictionary::Dictionary() : stats() {
     head = 0;
     dictionaryName = copyText("Romanian-English Dictionary");
     nextId = 1;
-    modified = false;
     version = 1.0f;
 }
 
-Dictionary::Dictionary(const char* dictionaryName, float version, bool modified, int nextId)
+Dictionary::Dictionary(const char* dictionaryName, float version, int nextId)
     : stats() {
     head = 0;
     this->dictionaryName = copyText(dictionaryName);
     this->nextId = nextId;
-    this->modified = modified;
     this->version = version;
 }
 
@@ -79,10 +77,6 @@ int Dictionary::getNextId() const {
     return nextId;
 }
 
-bool Dictionary::isModified() const {
-    return modified;
-}
-
 float Dictionary::getVersion() const {
     return version;
 }
@@ -97,10 +91,6 @@ void Dictionary::setVersion(float version) {
     this->version = version;
 }
 
-void Dictionary::setModified(bool modified) {
-    this->modified = modified;
-}
-
 void Dictionary::addWord(const Word& word) {
     Word copyWord(word);
 
@@ -111,7 +101,6 @@ void Dictionary::addWord(const Word& word) {
 
     DictionaryNode* newNode = new DictionaryNode(copyWord, countWords() + 1, false, 1.0f, head);
     head = newNode;
-    modified = true;
     refreshStats();
     stats.setChanged(true);
 }
@@ -155,7 +144,6 @@ bool Dictionary::deleteWord(const char* word) {
         head = head->getNext();
         stats.setDeletedWords(stats.getDeletedWords() + 1);
         delete nodeToDelete;
-        modified = true;
         refreshStats();
         stats.setChanged(true);
         return true;
@@ -169,7 +157,6 @@ bool Dictionary::deleteWord(const char* word) {
             previous->setNext(current->getNext());
             stats.setDeletedWords(stats.getDeletedWords() + 1);
             delete current;
-            modified = true;
             refreshStats();
             stats.setChanged(true);
             return true;
@@ -190,7 +177,6 @@ bool Dictionary::updateEnglishWord(const char* romanian, const char* newEnglish)
     }
 
     foundNode->getInfo().changeTranslation(newEnglish);
-    modified = true;
     stats.setChanged(true);
     return true;
 }
@@ -233,7 +219,6 @@ void Dictionary::printStats() const {
 std::ostream& operator<<(std::ostream& out, const Dictionary& dictionary) {
     out << "Name: " << dictionary.dictionaryName << "\n";
     out << "Next id: " << dictionary.nextId << "\n";
-    out << "Modified: " << (dictionary.modified ? "yes" : "no") << "\n";
     out << "Version: " << dictionary.version << "\n";
     out << dictionary.stats;
     return out;
@@ -252,7 +237,6 @@ std::istream& operator>>(std::istream& in, Dictionary& dictionary) {
 
     dictionary.setDictionaryName(name);
     dictionary.setVersion(version);
-    dictionary.setModified(false);
 
     return in;
 }

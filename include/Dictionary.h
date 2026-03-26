@@ -11,7 +11,6 @@ private:
     DictionaryNode* head;
     char* dictionaryName;
     int nextId;
-    bool modified;
     float version;
     DictionaryStats stats;
 
@@ -21,18 +20,15 @@ private:
 
 public:
     Dictionary();
-    explicit Dictionary(const char* dictionaryName, float version = 1.0f,
-                        bool modified = false, int nextId = 1);
+    explicit Dictionary(const char* dictionaryName, float version = 1.0f, int nextId = 1);
     ~Dictionary();
 
     const char* getDictionaryName() const;
     int getNextId() const;
-    bool isModified() const;
     float getVersion() const;
 
     void setDictionaryName(const char* dictionaryName);
     void setVersion(float version);
-    void setModified(bool modified);
 
     void addWord(const Word& word);
     void printAll() const;

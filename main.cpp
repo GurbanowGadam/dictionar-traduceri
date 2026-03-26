@@ -24,7 +24,7 @@ void readText(char text[], int size) {
 }
 
 int main() {
-    Dictionary dictionary("Romanian-English Dictionary", 1.0f, false, 1);
+    Dictionary dictionary("Romanian-English Dictionary", 1.0f, 1);
 
     int choice;
 
