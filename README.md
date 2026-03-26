@@ -68,7 +68,7 @@ The `DictionaryNode` class represents one node from the linked list.
 Each node contains:
 - one `Word` object
 - pointer to the next node
-- extra node information
+- extra node information such as index, marked, and weight
 
 ### DictionaryStats
 
@@ -80,6 +80,8 @@ Examples:
 - average word length
 - type counters
 
+It is used internally by `Dictionary` to recompute and print statistics.
+
 ### Dictionary
 
 The `Dictionary` class manages the full linked list of words.
@@ -90,6 +92,8 @@ It is responsible for:
 - deleting words
 - updating translations
 - printing words
-- updating statistics
+- recomputing statistics after changes
+
+The program runs through an interactive console menu from `main.cpp`; the demo function was removed.
 
 This design keeps the original dictionary theme, but extends it so the project covers more OOP requirements.
