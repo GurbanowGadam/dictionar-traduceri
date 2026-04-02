@@ -85,14 +85,6 @@ const char* Word::getWordType() const {
     return wordType;
 }
 
-bool Word::isActive() const {
-    return active;
-}
-
-char Word::getLevel() const {
-    return level;
-}
-
 void Word::setId(int id) {
     this->id = id;
 }

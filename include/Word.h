@@ -26,8 +26,6 @@ public:
     const char* getRomanianWord() const;
     const char* getEnglishWord() const;
     const char* getWordType() const;
-    bool isActive() const;
-    char getLevel() const;
 
     void setId(int id);
     void setRomanianWord(const char* romanianWord);
