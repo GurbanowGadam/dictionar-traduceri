@@ -23,34 +23,6 @@ DictionaryNode* DictionaryNode::getNext() const {
     return next;
 }
 
-int DictionaryNode::getIndex() const {
-    return index;
-}
-
-bool DictionaryNode::isMarked() const {
-    return marked;
-}
-
-float DictionaryNode::getWeight() const {
-    return weight;
-}
-
-void DictionaryNode::setInfo(const Word& info) {
-    this->info = info;
-}
-
 void DictionaryNode::setNext(DictionaryNode* next) {
     this->next = next;
-}
-
-void DictionaryNode::setIndex(int index) {
-    this->index = index;
-}
-
-void DictionaryNode::setMarked(bool marked) {
-    this->marked = marked;
-}
-
-void DictionaryNode::setWeight(float weight) {
-    this->weight = weight;
 }

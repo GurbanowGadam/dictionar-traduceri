@@ -22,15 +22,8 @@ public:
     const Word& getInfo() const;
     Word& getInfo();
     DictionaryNode* getNext() const;
-    int getIndex() const;
-    bool isMarked() const;
-    float getWeight() const;
 
-    void setInfo(const Word& info);
     void setNext(DictionaryNode* next);
-    void setIndex(int index);
-    void setMarked(bool marked);
-    void setWeight(float weight);
 };
 
 #endif

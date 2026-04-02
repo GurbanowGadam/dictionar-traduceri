@@ -68,7 +68,6 @@ The `DictionaryNode` class represents one node from the linked list.
 Each node contains:
 - one `Word` object
 - pointer to the next node
-- extra node information such as index, marked, and weight
 
 ### DictionaryStats
 
