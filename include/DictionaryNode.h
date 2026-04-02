@@ -13,7 +13,6 @@ private:
 public:
     DictionaryNode();
     explicit DictionaryNode(const Word& info, DictionaryNode* next = 0);
-    ~DictionaryNode();
 
     const Word& getInfo() const;
     Word& getInfo();

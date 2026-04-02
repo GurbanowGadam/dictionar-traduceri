@@ -7,9 +7,6 @@ DictionaryNode::DictionaryNode(const Word& info, DictionaryNode* next)
     : info(info), next(next) {
 }
 
-DictionaryNode::~DictionaryNode() {
-}
-
 const Word& DictionaryNode::getInfo() const {
     return info;
 }
