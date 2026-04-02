@@ -99,7 +99,7 @@ void Dictionary::addWord(const Word& word) {
         nextId++;
     }
 
-    DictionaryNode* newNode = new DictionaryNode(copyWord, countWords() + 1, false, 1.0f, head);
+    DictionaryNode* newNode = new DictionaryNode(copyWord, head);
     head = newNode;
     refreshStats();
     stats.setChanged(true);

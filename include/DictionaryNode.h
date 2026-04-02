@@ -9,14 +9,10 @@ class DictionaryNode {
 private:
     Word info;
     DictionaryNode* next;
-    int index;
-    bool marked;
-    float weight;
 
 public:
     DictionaryNode();
-    explicit DictionaryNode(const Word& info, int index = 0, bool marked = false,
-                            float weight = 1.0f, DictionaryNode* next = 0);
+    explicit DictionaryNode(const Word& info, DictionaryNode* next = 0);
     ~DictionaryNode();
 
     const Word& getInfo() const;
