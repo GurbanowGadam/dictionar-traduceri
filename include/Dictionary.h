@@ -27,7 +27,6 @@ public:
     int getNextId() const;
     float getVersion() const;
 
-    void setDictionaryName(const char* dictionaryName);
     void setVersion(float version);
 
     void addWord(const Word& word);

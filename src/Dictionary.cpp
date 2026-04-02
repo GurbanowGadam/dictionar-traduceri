@@ -81,12 +81,6 @@ float Dictionary::getVersion() const {
     return version;
 }
 
-void Dictionary::setDictionaryName(const char* dictionaryName) {
-    char* newText = copyText(dictionaryName);
-    delete[] this->dictionaryName;
-    this->dictionaryName = newText;
-}
-
 void Dictionary::setVersion(float version) {
     this->version = version;
 }
@@ -235,7 +229,9 @@ std::istream& operator>>(std::istream& in, Dictionary& dictionary) {
     in >> version;
     in.ignore(1000, '\n');
 
-    dictionary.setDictionaryName(name);
+    char* newName = dictionary.copyText(name);
+    delete[] dictionary.dictionaryName;
+    dictionary.dictionaryName = newName;
     dictionary.setVersion(version);
 
     return in;
